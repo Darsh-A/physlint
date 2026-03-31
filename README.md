@@ -2,8 +2,7 @@
 
 Static analysis for physical unit consistency in Python. Reads unit annotations, propagates them through arithmetic via AST traversal, and flags dimensional or scale mismatches — all without executing your code.
 
-<img width="671" height="503" alt="image" src="https://github.com/user-attachments/assets/f7809566-4337-4680-bfab-fab371f11b03" />
-
+<img width="537" height="501" alt="image" src="https://github.com/user-attachments/assets/87d59755-6178-4a71-b768-b0a20c7a970d" />
 
 ## Install
 
