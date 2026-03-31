@@ -1,6 +1,6 @@
 # physlint
 
-Static analysis for physical unit consistency in Python. Reads unit annotations, propagates them through arithmetic via AST traversal, and flags dimensional or scale mismatches — all without executing your code.
+Maintain physical unit consistency with simple in-line comments and type definitions 
 
 <img width="537" height="501" alt="image" src="https://github.com/user-attachments/assets/87d59755-6178-4a71-b768-b0a20c7a970d" />
 
