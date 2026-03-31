@@ -16,13 +16,23 @@
   ],
   "main": "./out/extension.js",
   "contributes": {
+    "commands": [
+      {
+        "command": "physlint.restart",
+        "title": "physlint: Restart Server"
+      },
+      {
+        "command": "physlint.showOutput",
+        "title": "physlint: Show Output"
+      }
+    ],
     "configuration": {
       "title": "physlint",
       "properties": {
         "physlint.pythonPath": {
           "type": "string",
           "default": "python",
-          "description": "Path to the Python interpreter that has physlint installed."
+          "markdownDescription": "Path to the Python interpreter with `physlint[lsp]` installed. Leave as `python` to auto-detect from the Python extension or a local `.venv`."
         },
         "physlint.enable": {
           "type": "boolean",
@@ -41,6 +51,7 @@
     "vscode-languageclient": "^9.0.1"
   },
   "devDependencies": {
+    "@types/node": "^20.0.0",
     "@types/vscode": "^1.75.0",
     "@vscode/vsce": "^3.0.0",
     "typescript": "^5.0.0"

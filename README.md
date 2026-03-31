@@ -7,7 +7,7 @@ Static analysis for physical unit consistency in Python. Reads unit annotations,
 ### pip (from GitHub)
 
 ```bash
-pip install git+https://github.com/Darsh-A/physlint.git
+python -m pip install git+https://github.com/Darsh-A/physlint.git
 ```
 
 ### pip (local clone)
@@ -15,7 +15,7 @@ pip install git+https://github.com/Darsh-A/physlint.git
 ```bash
 git clone https://github.com/Darsh-A/physlint.git
 cd physlint
-pip install .
+python -m pip install .
 ```
 
 ### pre-commit (no install needed)
@@ -90,15 +90,15 @@ Exit code `1` when any error or warning is present, `0` otherwise.
 
 ## Editor integration
 
-Install the LSP dependencies first:
+Install physlint with LSP support first:
 
 ```bash
-pip install "physlint[lsp]"
+python -m pip install "physlint[lsp]"
 ```
 
 ### VS Code
 
-Clone the repo, then build the extension:
+Build and install the extension:
 
 ```bash
 cd physlint/src/plugins/vscode
@@ -109,9 +109,16 @@ npm run package
 
 In VS Code: **Extensions** > **...** > **Install from VSIX...** > select `physlint-0.1.0.vsix`.
 
+The extension auto-detects your Python interpreter — it checks the ms-python extension's selected interpreter first, then looks for a `.venv` in your workspace. If neither works, set `physlint.pythonPath` in VS Code settings to the Python that has `physlint[lsp]` installed.
+
+If the server fails to start, you'll get an error notification with options to view the log or open settings. You can also use the command palette (`Ctrl+Shift+P`):
+
+- **physlint: Restart Server** — restart after changing settings or reinstalling
+- **physlint: Show Output** — view the server log
+
 | Setting | Default | Description |
 |---|---|---|
-| `physlint.pythonPath` | `"python"` | Python interpreter with physlint installed |
+| `physlint.pythonPath` | `"python"` | Python interpreter (auto-detects if left as default) |
 | `physlint.enable` | `true` | Enable/disable the extension |
 
 ### Neovim
@@ -175,6 +182,6 @@ Every Greek letter and special character has a plain ASCII name you can type ins
 git clone https://github.com/Darsh-A/physlint.git
 cd physlint
 python -m venv .venv && source .venv/bin/activate
-pip install -e ".[dev,lsp]"
+python -m pip install -e ".[dev,lsp]"
 pytest
 ```

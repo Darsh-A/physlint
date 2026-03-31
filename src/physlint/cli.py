@@ -2,13 +2,32 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import pathlib
 import sys
 
 from physlint.config import Config, load_config
 from physlint.engine import Diagnostic, analyze
 
-_INFO_CODES = {"UNIT_INFERRED"}
+_LEVELS: dict[str, tuple[str, str]] = {
+    "UNIT_MISMATCH":  ("error",   "31"),
+    "UNIT_CONFLICT":  ("error",   "31"),
+    "SCALE_MISMATCH": ("warning", "33"),
+    "SCALE_CONFLICT": ("warning", "33"),
+    "UNIT_INFERRED":  ("info",    "36"),
+}
+
+_use_color = sys.stderr.isatty() and os.environ.get("NO_COLOR") is None
+
+
+def _c(code: str, text: str) -> str:
+    if not _use_color:
+        return text
+    return f"\033[{code}m{text}\033[0m"
+
+
+def _bold(text: str) -> str:
+    return _c("1", text)
 
 
 def _collect_files(paths: list[str], recursive: bool) -> list[pathlib.Path]:
@@ -24,8 +43,21 @@ def _collect_files(paths: list[str], recursive: bool) -> list[pathlib.Path]:
     return result
 
 
-def _format_text(filepath: pathlib.Path, diag: Diagnostic) -> str:
-    return f"{filepath}:{diag.line}:{diag.col}: {diag.code:<18s} {diag.message}"
+def _print_diag(filepath: pathlib.Path, diag: Diagnostic, source_lines: list[str]) -> None:
+    level, color = _LEVELS.get(diag.code, ("info", "36"))
+    label = _c(f"1;{color}", level)
+    code = _c("2", diag.code)
+    location = _c("1", f"{filepath}:{diag.line}:{diag.col}")
+
+    print(f"  {location}  {label}  {diag.message}  {code}")
+
+    if 1 <= diag.line <= len(source_lines):
+        line_text = source_lines[diag.line - 1].rstrip()
+        gutter = _c("2", f"  {diag.line:>4} |")
+        print(f"  {gutter} {line_text}")
+        marker = " " * diag.col + _c(f"1;{color}", "^")
+        blank_gutter = _c("2", "       |")
+        print(f"  {blank_gutter} {marker}")
 
 
 def _format_json(filepath: pathlib.Path, diag: Diagnostic) -> dict:
@@ -74,21 +106,46 @@ def main(argv: list[str] | None = None) -> int:
         return 1
 
     all_json: list[dict] = []
-    has_errors = False
+    counts: dict[str, int] = {"error": 0, "warning": 0, "info": 0}
 
     for filepath in files:
         source = filepath.read_text(encoding="utf-8")
-        for diag in analyze(source, config):
-            if diag.code not in _INFO_CODES:
-                has_errors = True
+        diags = analyze(source, config)
+        if not diags:
+            continue
+
+        if not args.json_output:
+            print()
+            print(_bold(str(filepath)))
+
+        source_lines = source.splitlines()
+        for diag in diags:
+            level, _ = _LEVELS.get(diag.code, ("info", "36"))
+            counts[level] += 1
             if args.json_output:
                 all_json.append(_format_json(filepath, diag))
             else:
-                print(_format_text(filepath, diag))
+                _print_diag(filepath, diag, source_lines)
 
     if args.json_output:
         print(json.dumps(all_json, indent=2))
+    else:
+        parts = []
+        if counts["error"]:
+            parts.append(_c("1;31", f"{counts['error']} error{'s' if counts['error'] != 1 else ''}"))
+        if counts["warning"]:
+            parts.append(_c("1;33", f"{counts['warning']} warning{'s' if counts['warning'] != 1 else ''}"))
+        if counts["info"]:
+            parts.append(_c("36", f"{counts['info']} info"))
+        if parts:
+            print()
+            print("  " + ", ".join(parts))
+            print()
+        elif files:
+            print(_c("32", "  all clean"))
+            print()
 
+    has_errors = counts["error"] > 0 or counts["warning"] > 0
     return 1 if has_errors else 0
 
 
