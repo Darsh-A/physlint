@@ -4,46 +4,29 @@ Real-time physical unit diagnostics and hover info for Python files.
 
 ## Install
 
-**1. Install physlint with LSP support:**
+Install from the VS Code Marketplace — search **physlint** in the Extensions tab, or use the command line:
 
 ```bash
-python -m pip install "physlint[lsp]"
+code --install-extension Darsh-A.physlint
 ```
 
-**2. Build and install the extension:**
+That's it. The extension automatically installs everything it needs on first activation — no manual `pip install` required. Just open a Python file.
 
-```bash
-cd src/plugins/vscode
-npm install
-npm run compile
-npm run package          # produces physlint-0.1.0.vsix
-```
+## Requirements
 
-In VS Code: **Extensions** > **...** > **Install from VSIX...** > select `physlint-0.1.0.vsix`.
-
-**3. Open a Python file** — the extension activates automatically.
-
-## Python detection
-
-The extension finds your Python interpreter in this order:
-
-1. `physlint.pythonPath` setting (if you set it explicitly)
-2. The ms-python extension's selected interpreter (`python.defaultInterpreterPath`)
-3. A local `.venv/bin/python` or `venv/bin/python` in the workspace
-4. Falls back to `python`
-
-If the LSP server can't start, you'll get an error with options to view the output log or open settings.
+Python 3.11+ must be available on your system. The extension creates a private environment and installs `physlint` into it automatically.
 
 ## Commands
 
-Open the command palette (`Ctrl+Shift+P`) and type `physlint`:
+Open the command palette (`Ctrl+Shift+P`):
 
-- **physlint: Restart Server** — restart the LSP server after changing settings or reinstalling
-- **physlint: Show Output** — open the output log for debugging
+- **physlint: Restart Server** — restart the LSP server
+- **physlint: Reinstall Server** — wipe the private environment and reinstall from scratch
+- **physlint: Show Output** — view the server log
 
 ## Settings
 
 | Setting | Default | Description |
 |---|---|---|
-| `physlint.pythonPath` | `"python"` | Python interpreter with `physlint[lsp]` installed |
+| `physlint.pythonPath` | `"python"` | Override which Python is used to create the environment |
 | `physlint.enable` | `true` | Enable/disable the extension |

@@ -15,5 +15,5 @@ distance = velocity * time
 
 kinetic_energy = mass * velocity ** 2
 
-# this line is wrong on purpose — adding incompatible units
+# this line is wrong on purpose
 bad = force + velocity

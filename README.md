@@ -106,35 +106,21 @@ Exit code `1` when any error or warning is present, `0` otherwise.
 
 ## Editor integration
 
-Install physlint with LSP support first:
-
-```bash
-python -m pip install "physlint[lsp]"
-```
-
 ### VS Code
 
-Build and install the extension:
+Install from the Marketplace — search **physlint** in the Extensions tab. Everything else is automatic: the extension creates a private environment and installs `physlint` on first activation. Just open a Python file.
 
-```bash
-cd physlint/src/plugins/vscode
-npm install
-npm run compile
-npm run package
-```
+Only requirement: Python 3.11+ on your system.
 
-In VS Code: **Extensions** > **...** > **Install from VSIX...** > select `physlint-0.1.0.vsix`.
+Commands (`Ctrl+Shift+P`):
 
-The extension auto-detects your Python interpreter — it checks the ms-python extension's selected interpreter first, then looks for a `.venv` in your workspace. If neither works, set `physlint.pythonPath` in VS Code settings to the Python that has `physlint[lsp]` installed.
-
-If the server fails to start, you'll get an error notification with options to view the log or open settings. You can also use the command palette (`Ctrl+Shift+P`):
-
-- **physlint: Restart Server** — restart after changing settings or reinstalling
+- **physlint: Restart Server** — restart the LSP server
+- **physlint: Reinstall Server** — wipe and reinstall from scratch
 - **physlint: Show Output** — view the server log
 
 | Setting | Default | Description |
 |---|---|---|
-| `physlint.pythonPath` | `"python"` | Python interpreter (auto-detects if left as default) |
+| `physlint.pythonPath` | `"python"` | Override which Python creates the environment |
 | `physlint.enable` | `true` | Enable/disable the extension |
 
 ### Neovim

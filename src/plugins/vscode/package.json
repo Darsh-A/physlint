@@ -3,7 +3,7 @@
   "displayName": "physlint",
   "description": "Physical unit consistency checking for Python",
   "version": "0.1.0",
-  "publisher": "physlint",
+  "publisher": "Darsh-A",
   "license": "MIT",
   "engines": {
     "vscode": "^1.75.0"
@@ -22,6 +22,10 @@
         "title": "physlint: Restart Server"
       },
       {
+        "command": "physlint.reinstall",
+        "title": "physlint: Reinstall Server"
+      },
+      {
         "command": "physlint.showOutput",
         "title": "physlint: Show Output"
       }
@@ -32,7 +36,7 @@
         "physlint.pythonPath": {
           "type": "string",
           "default": "python",
-          "markdownDescription": "Path to the Python interpreter with `physlint[lsp]` installed. Leave as `python` to auto-detect from the Python extension or a local `.venv`."
+          "markdownDescription": "Override the Python interpreter used to create the private environment. Leave as `python` for automatic setup."
         },
         "physlint.enable": {
           "type": "boolean",
