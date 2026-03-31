@@ -56,6 +56,30 @@ class _Analyzer(ast.NodeVisitor):
     def _should_ignore(self, name: str) -> bool:
         return any(name.startswith(p) for p in self._config.ignore_prefix)
 
+    def _unit_from_annotation(self, node: ast.expr) -> Unit | None:
+        """Extract a unit from a type annotation node.
+
+        Supports:
+          - bare string:  "m/s"
+          - Annotated:    Annotated[float, "m/s"]
+        """
+        if isinstance(node, ast.Constant) and isinstance(node.value, str):
+            return parse_unit(node.value)
+
+        if isinstance(node, ast.Subscript):
+            name_node = node.value
+            is_annotated = (
+                (isinstance(name_node, ast.Name) and name_node.id == "Annotated")
+                or (isinstance(name_node, ast.Attribute) and name_node.attr == "Annotated")
+            )
+            if is_annotated and isinstance(node.slice, ast.Tuple):
+                for elt in node.slice.elts[1:]:
+                    if isinstance(elt, ast.Constant) and isinstance(elt.value, str):
+                        unit = parse_unit(elt.value)
+                        if unit is not None:
+                            return unit
+        return None
+
     def visit_Assign(self, node: ast.Assign) -> None:
         if len(node.targets) != 1 or not isinstance(node.targets[0], ast.Name):
             self.generic_visit(node)
@@ -99,9 +123,7 @@ class _Analyzer(ast.NodeVisitor):
             self.generic_visit(node)
             return
 
-        unit: Unit | None = None
-        if isinstance(node.annotation, ast.Constant) and isinstance(node.annotation.value, str):
-            unit = parse_unit(node.annotation.value)
+        unit = self._unit_from_annotation(node.annotation)
 
         inferred_unit: Unit | None = None
         if node.value is not None:
@@ -131,16 +153,14 @@ class _Analyzer(ast.NodeVisitor):
         saved: dict[str, Unit | None] = {}
 
         for arg in node.args.args:
-            ann = arg.annotation
-            if isinstance(ann, ast.Constant) and isinstance(ann.value, str):
-                unit = parse_unit(ann.value)
+            if arg.annotation is not None:
+                unit = self._unit_from_annotation(arg.annotation)
                 if unit is not None:
                     saved[arg.arg] = self._symbols.get(arg.arg)
                     self._symbols.set(arg.arg, unit)
 
-        ret_ann = node.returns
-        if isinstance(ret_ann, ast.Constant) and isinstance(ret_ann.value, str):
-            ret_unit = parse_unit(ret_ann.value)
+        if node.returns is not None:
+            ret_unit = self._unit_from_annotation(node.returns)
             if ret_unit is not None:
                 saved["__return__"] = self._symbols.get("__return__")
                 self._symbols.set("__return__", ret_unit)

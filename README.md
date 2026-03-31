@@ -47,22 +47,36 @@ pre-commit run physlint --all-files
 
 ## Annotating units
 
-Two styles:
+Three styles — pick whichever fits:
 
 ```python
-# type-annotation style
-velocity: "m/s" = 20.0
-mass: "kg" = 5.0
+from typing import Annotated
 
-# trailing-comment style
-acceleration = 9.81  # m/s^2
+# Annotated style (recommended — works with Pylance/mypy)
+velocity: Annotated[float, "m/s"] = 20.0
+mass: Annotated[float, "kg"] = 5.0
+
+# bare string style (shorter, but type checkers will complain)
+acceleration: "m/s^2" = 9.81
+
+# trailing comment style
+gravity = 9.81  # m/s^2
 ```
+
+`Annotated` is the recommended style — type checkers see `float` and stay happy, physlint reads the unit from the metadata.
 
 Units propagate through arithmetic automatically:
 
 ```python
 force = mass * acceleration  # inferred: kg*m/s^2 (N)
 distance = velocity * time   # inferred: m
+```
+
+Functions work too:
+
+```python
+def kinetic_energy(m: Annotated[float, "kg"], v: Annotated[float, "m/s"]) -> Annotated[float, "J"]:
+    return 0.5 * m * v ** 2
 ```
 
 ## CLI

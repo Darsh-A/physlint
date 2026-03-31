@@ -1,5 +1,7 @@
-mass: "kg" = 5.0
-acceleration: "m/s^2" = 9.81
+from typing import Annotated
+
+mass: Annotated[float, "kg"] = 5.0
+acceleration: Annotated[float, "m/s^2"] = 9.81
 
 spring_k = 200.0        # N/m
 displacement = 0.05     # m
@@ -7,8 +9,8 @@ displacement = 0.05     # m
 force = mass * acceleration
 spring_force = spring_k * displacement
 
-velocity: "m/s" = 20.0
-time: "s" = 4.0
+velocity: Annotated[float, "m/s"] = 20.0
+time: Annotated[float, "s"] = 4.0
 distance = velocity * time
 
 kinetic_energy = mass * velocity ** 2
