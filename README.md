@@ -108,7 +108,12 @@ Exit code `1` when any error or warning is present, `0` otherwise.
 
 ### VS Code
 
-Install from the Marketplace — search **physlint** in the Extensions tab. Everything else is automatic: the extension creates a private environment and installs `physlint` on first activation. Just open a Python file.
+Install from the Marketplace
+```bash
+https://marketplace.visualstudio.com/items?itemName=Darsh-A.physlint
+```
+
+the extension creates a private environment and installs `physlint` on first activation. Just open a Python file.
 
 Only requirement: Python 3.11+ on your system.
 
