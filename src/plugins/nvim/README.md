@@ -29,7 +29,7 @@ Or point at the repo directly:
 
 ```lua
 {
-  "yourname/physlint",
+  "Darsh-A/physlint",
   ft = "python",
   opts = {},
 }
