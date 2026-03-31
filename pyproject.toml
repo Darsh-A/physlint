@@ -1,0 +1,27 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "physlint"
+version = "0.1.0"
+description = "Static analysis for physical unit consistency in Python"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+keywords = ["physics", "units", "lint", "static-analysis"]
+dependencies = []
+
+[project.optional-dependencies]
+lsp = ["pygls>=2.1.0"]
+dev = ["pytest>=9.0.0"]
+
+[project.scripts]
+physlint = "physlint.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/physlint"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

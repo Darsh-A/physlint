@@ -1,0 +1,7 @@
+- id: physlint
+  name: physlint
+  description: Check physical unit consistency in Python code
+  entry: physlint
+  language: python
+  types: [python]
+  additional_dependencies: []

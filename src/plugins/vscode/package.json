@@ -1,0 +1,48 @@
+{
+  "name": "physlint",
+  "displayName": "physlint",
+  "description": "Physical unit consistency checking for Python",
+  "version": "0.1.0",
+  "publisher": "physlint",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "categories": [
+    "Linters"
+  ],
+  "activationEvents": [
+    "onLanguage:python"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "configuration": {
+      "title": "physlint",
+      "properties": {
+        "physlint.pythonPath": {
+          "type": "string",
+          "default": "python",
+          "description": "Path to the Python interpreter that has physlint installed."
+        },
+        "physlint.enable": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable or disable physlint."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "compile": "tsc -p .",
+    "watch": "tsc -watch -p .",
+    "package": "npx @vscode/vsce package"
+  },
+  "dependencies": {
+    "vscode-languageclient": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.75.0",
+    "@vscode/vsce": "^3.0.0",
+    "typescript": "^5.0.0"
+  }
+}

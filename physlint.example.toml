@@ -1,0 +1,33 @@
+# physlint configuration
+# Copy this file into your project root as "physlint.toml" and adjust.
+
+[physlint]
+
+# Strict mode: when true, unknown variables in expressions produce errors
+# instead of silently returning UNKNOWN. Default: false.
+strict = false
+
+# Strict scale checking: when true, adding values with the same dimensions
+# but different SI prefixes (e.g. km + m) produces a SCALE_MISMATCH warning.
+# Set to false if you routinely mix prefixed and non-prefixed units and
+# handle conversion yourself. Default: true.
+strict_scale = true
+
+# Ignore variables whose names start with any of these prefixes.
+# Useful for temporaries, loop counters, or private helpers that aren't
+# meant to carry physical meaning.
+# Example: ["_", "tmp"]
+ignore_prefix = ["_"]
+
+# Suppress specific diagnostic codes entirely.
+# Codes: UNIT_MISMATCH, UNIT_CONFLICT, SCALE_MISMATCH, SCALE_CONFLICT, UNIT_INFERRED
+# Example: ["UNIT_INFERRED"] to hide all inference info messages.
+ignore_rules = []
+
+# Custom unit aliases. Maps a name to a unit expression string.
+# These are resolved on top of the built-in aliases (g, L, min, hr, ...).
+# Example:
+#   [physlint.aliases]
+#   "kph" = "km/hr"
+#   "psi" = "Pa"
+[physlint.aliases]
